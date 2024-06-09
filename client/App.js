@@ -15,6 +15,7 @@ import LoadingSpinner from './common/components/LoadingSpinner';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setupInterceptor } from './common/config/axios';
 import CustomHeader from './common/components/CustomHeader';
+import PharmaciesScreen from './screens/PharmaciesScreen';
 
 
 const Stack = createStackNavigator()
@@ -34,19 +35,26 @@ const AuthStack = () => {
 
 const AuthenticatedStack = () => {
   return <Stack.Navigator
-    initialRouteName='ReturnRequests'
+    initialRouteName='Pharmacies'
     screenOptions={{
       headerTintColor: Colors.primary800,
-      headerStyle: { backgroundColor: 'transparent' },
+      headerStyle: { backgroundColor: 'white', height: 150 },
+      headerShadowVisible: false,
       headerBackTitleVisible: false
 
     }}
   >
     <Stack.Screen
+      name='Pharmacies'
+      component={PharmaciesScreen}
+      options={{
+        header: ({ navigation }) => <CustomHeader navigation={navigation} />
+      }} />
+    <Stack.Screen
       name='ReturnRequests'
       component={ReturnRequestsScreen}
       options={{
-        header: ({ navigation }) => <CustomHeader navigation={navigation} />
+        header: ({ navigation }) => <CustomHeader navigation={navigation} showBackButton={true} />
       }} />
     <Stack.Screen
       name='CreateRequest'
@@ -55,7 +63,9 @@ const AuthenticatedStack = () => {
         title: 'Create New Request'
       }} />
     <Stack.Screen name='Items' component={ItemsScreen} />
-    <Stack.Screen name='AddItem' component={AddItemScreen} />
+    <Stack.Screen name='AddItem' component={AddItemScreen} options={{
+      title: 'Add Item'
+    }} />
 
   </Stack.Navigator>
 }
@@ -73,7 +83,7 @@ const Navigation = () => {
 const Root = () => {
   const { loading, setIsLoading } = useLoading()
   const authCtx = useContext(AuthContext)
-  setupInterceptor(authCtx)
+
   const fetchToken = async () => {
     setIsLoading(true)
     const storedToken = await AsyncStorage.getItem('token')
@@ -81,6 +91,8 @@ const Root = () => {
     if (storedToken) {
       authCtx.authenticate(storedToken)
     }
+
+    setupInterceptor()
 
     setIsLoading(false)
 

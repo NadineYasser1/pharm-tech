@@ -2,21 +2,27 @@ import React from 'react';
 import { View, Image, Dimensions } from 'react-native';
 import { Colors } from '../../constants/GlobalColors';
 import LogoutButton from './LogoutButton';
+import IconButton from './IconButton';
 
 const windowHeight = Dimensions.get('window').height;
 
-const CustomHeader = () => {
+const CustomHeader = ({ navigation, showBackButton }) => {
+    const handleBackButtonPress = () => {
+        navigation.goBack()
+    }
     return (
         <View style={styles.container}>
-            <View style={styles.logoContainer}>
+            {showBackButton && <IconButton icon='chevron-left' size={35} color={Colors.primary800} onPress={handleBackButtonPress} />}
+            <View style={[styles.logoContainer, !showBackButton && { marginLeft: 40, marginRight: 0 }]}>
                 <Image
                     source={require('../../assets/logo.png')}
                     style={styles.logo}
                     resizeMode="contain"
                 />
             </View>
-
-            <LogoutButton color={Colors.primary800} />
+            {!showBackButton &&
+                <LogoutButton color={Colors.primary800} />
+            }
         </View>
     );
 };
@@ -38,7 +44,8 @@ const styles = {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: 40
+        // marginLeft: 40
+        marginRight: 40
     },
     logo: {
         width: 60,

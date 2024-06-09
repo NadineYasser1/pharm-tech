@@ -1,11 +1,14 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native"
+import React, { useRef } from "react";
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { Colors } from "../../constants/GlobalColors";
 
 const InputField = ({ label, showLabel, placeholder, handleChange, keyboardType, secureTextEntry }) => {
+    const inputRef = useRef(null);
+
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             {showLabel && (
                 <View>
                     <Text style={styles.label}>{label}</Text>
@@ -13,17 +16,18 @@ const InputField = ({ label, showLabel, placeholder, handleChange, keyboardType,
             )}
             <View style={styles.inputContainer}>
                 <TextInput
+                    ref={inputRef}
                     style={styles.input}
                     placeholder={placeholder}
                     onChangeText={handleChange}
                     keyboardType={keyboardType}
                     secureTextEntry={secureTextEntry}
-                    autoCapitalize={false}
+                    autoCapitalize='none'
                 />
             </View>
         </KeyboardAvoidingView>
-    )
-}
+    );
+};
 
 export default InputField;
 
@@ -35,7 +39,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: Colors.white400,
         borderRadius: 20,
         padding: 10,
         paddingVertical: 10,
@@ -50,4 +54,4 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: '100%',
     }
-})
+});

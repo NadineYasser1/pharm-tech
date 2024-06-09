@@ -19,6 +19,7 @@
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-native": "0.74.2",
+    "react-native-dropdown-select-list": "^2.0.5",
     "react-native-gesture-handler": "^2.16.2"
   },
   "devDependencies": {

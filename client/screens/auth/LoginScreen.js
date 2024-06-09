@@ -7,7 +7,6 @@ import useLoading from '../../common/hooks/useLoading';
 import { axios } from '../../common/config/axios';
 import { API } from '../../common/config/API';
 import { AuthContext } from '../../store/AuthContext';
-import LoadingSpinner from '../../common/components/LoadingSpinner';
 import Layout from '../../common/components/Layout';
 
 const windowHeight = Dimensions.get('window').height
