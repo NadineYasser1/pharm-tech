@@ -32,7 +32,11 @@ const PharmaciesScreen = ({ navigation }) => {
     }
     useEffect(() => {
         fetchData()
+        const intervalId = setInterval(fetchData,  3 * 60 * 1000);  //To avoid caching when user navigates back to this screen
+
+        return () => clearInterval(intervalId);
     }, [])
+
     return (
         <Layout loading={loading}>
             <View style={styles.topContainer}>

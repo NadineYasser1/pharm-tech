@@ -1,14 +1,10 @@
-import React, { useRef } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { forwardRef } from 'react';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Colors } from "../../constants/GlobalColors";
 
-const InputField = ({ label, showLabel, placeholder, handleChange, keyboardType, secureTextEntry }) => {
-    const inputRef = useRef(null);
-
+const InputField = ({ label, showLabel, placeholder, keyboardType, secureTextEntry, value, handleChange }) => {
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.container}>
             {showLabel && (
                 <View>
                     <Text style={styles.label}>{label}</Text>
@@ -16,16 +12,16 @@ const InputField = ({ label, showLabel, placeholder, handleChange, keyboardType,
             )}
             <View style={styles.inputContainer}>
                 <TextInput
-                    ref={inputRef}
                     style={styles.input}
                     placeholder={placeholder}
-                    onChangeText={handleChange}
                     keyboardType={keyboardType}
                     secureTextEntry={secureTextEntry}
                     autoCapitalize='none'
+                    onChangeText={handleChange}
+                    value={value}
                 />
             </View>
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 

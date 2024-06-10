@@ -39,12 +39,15 @@ const ReturnRequestsScreen = ({ navigation, route }) => {
     handleNumItemsPress = (reqId) => {
         navigation.navigate("Items", {
             pharmacyId: pharmacyId,
-            reqId: reqId
+            returnReqId: reqId
         })
     }
 
     useEffect(() => {
         fetchData()
+        const intervalId = setInterval(fetchData,  60 * 1000); //To avoid caching when user navigates back to this screen
+
+        return () => clearInterval(intervalId);
     }, [])
 
     return (

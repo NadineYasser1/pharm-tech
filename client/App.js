@@ -91,7 +91,7 @@ const Root = () => {
     if (storedToken) {
       authCtx.authenticate(storedToken)
     }
-
+    
     setupInterceptor()
 
     setIsLoading(false)

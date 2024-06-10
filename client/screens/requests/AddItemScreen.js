@@ -1,62 +1,166 @@
-import React, { useRef } from 'react';
-import { Text, StyleSheet, ScrollView, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Platform, View, StyleSheet, KeyboardAvoidingView, Alert } from 'react-native';
 import Layout from '../../common/components/Layout';
 import useLoading from '../../common/hooks/useLoading';
 import InputField from '../../common/components/InputField';
+import FlatButton from '../../common/components/FlatButton';
+import{ axios }from '../../common/config/axios'
+import{ API }from '../../common/config/API'
+import ViewAllButton from '../../common/components/ViewAllButton';
 
-const AddItemScreen = () => {
+const AddItemScreen = ({route, navigation}) => {
+    const {pharmacyId, returnReqId} = route.params;
+    console.log(returnReqId, pharmacyId)
     const { setIsLoading, loading } = useLoading();
-    const formRefs = {
-        ndc: useRef(null),
-        description: useRef(null),
-        manufacturer: useRef(null),
-        fullQuantity: useRef(null),
-        partialQuantity: useRef(null),
-        name: useRef(null),
-        expirationDate: useRef(null),
-        lotNumber: useRef(null),
-        packageSize: useRef(null),
-        requestType: useRef(null),
-        dosage: useRef(null),
-        strength: useRef(null),
+    const [formData, setFormData] = useState({
+        ndc: '',
+        description: '',
+        manufacturer: '',
+        fullQuantity: '',
+        partialQuantity: '',
+        name: '',
+        expirationDate: '',
+        lotNumber: '',
+        packageSize: '',
+        requestType: '',
+        dosage: '',
+        strength: ''
+    });
+
+    const handleChange = (name, value) => {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
     };
 
-    const handleAddItem = async () => {
-        const formData = {
-            ndc: formRefs.ndc.current.value,
-            description: formRefs.description.current.value,
-            manufacturer: formRefs.manufacturer.current.value,
-            fullQuantity: formRefs.fullQuantity.current.value,
-            partialQuantity: formRefs.partialQuantity.current.value,
-            name: formRefs.name.current.value,
-            expirationDate: formRefs.expirationDate.current.value,
-            lotNumber: formRefs.lotNumber.current.value,
-            packageSize: formRefs.packageSize.current.value,
-            requestType: formRefs.requestType.current.value,
-            dosage: formRefs.dosage.current.value,
-            strength: formRefs.strength.current.value,
-        };
-    };
+    const handleAddItem = () => {
+        setIsLoading(true)
+        axios.post(API.items.replace('{pharmacyId}', pharmacyId).replace('{returnRequestId}', returnReqId), formData).then(({ data }) => {
+           Alert.alert('Success', `${data.name} added successfully`)
+           setFormData({
+            ndc: '',
+            description: '',
+            manufacturer: '',
+            fullQuantity: '',
+            partialQuantity: '',
+            name: '',
+            expirationDate: '',
+            lotNumber: '',
+            packageSize: '',
+            requestType: '',
+            dosage: '',
+            strength: ''  
+           })
+        }).catch((err) => {
+            console.log(err)
+        }).finally(() => {
+            setIsLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <ViewAllButton onPress={() => navigation.navigate('Items', {pharmacyId: pharmacyId, returnReqId: returnReqId})}/>
+            ),
+        });
+    }, [navigation]);
 
     return (
         <Layout loading={loading} style={styles.container}>
             <ScrollView>
-                <form onSubmit={handleAddItem}>
-                    <InputField ref={formRefs.ndc} label='NDC' showLabel placeholder='NDC' />
-                    <InputField ref={formRefs.description} label='Description' showLabel placeholder='Description' />
-                    <InputField ref={formRefs.manufacturer} label='Manufacturer' showLabel placeholder='Manufacturer' />
-                    <InputField ref={formRefs.fullQuantity} label='Full Quantity' showLabel placeholder='eg: 200' />
-                    <InputField ref={formRefs.partialQuantity} label='Partial Quantity' showLabel placeholder='eg: 200' />
-                    <InputField ref={formRefs.name} label='Name' showLabel placeholder='Name' />
-                    <InputField ref={formRefs.expirationDate} label='Expiration Date' showLabel placeholder='YYYY-MM' />
-                    <InputField ref={formRefs.lotNumber} label='Lot Number' showLabel placeholder='Lot Number' />
-                    <InputField ref={formRefs.packageSize} label='Package Size ' showLabel placeholder='Package Size' />
-                    <InputField ref={formRefs.requestType} label='Request Type' showLabel placeholder='Request Type' />
-                    <InputField ref={formRefs.dosage} label='Dosage' showLabel placeholder='Dosage' />
-                    <InputField ref={formRefs.strength} label='Strength' showLabel placeholder='Strength' />
-                    <Button title="Add Item" onPress={handleAddItem} />
-                </form>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <InputField
+                    label='NDC'
+                    showLabel
+                    placeholder='NDC'
+                    value={formData.ndc}
+                    handleChange={(value) => handleChange('ndc', value)}
+                />
+                <InputField
+                    label='Description'
+                    showLabel
+                    placeholder='Description'
+                    value={formData.description}
+                    handleChange={(value) => handleChange('description', value)}
+                />
+                <InputField
+                    label='Manufacturer'
+                    showLabel
+                    placeholder='Manufacturer'
+                    value={formData.manufacturer}
+                    handleChange={(value) => handleChange('manufacturer', value)}
+                />
+                <InputField
+                    label='Full Quantity'
+                    showLabel
+                    value={formData.fullQuantity}
+                    placeholder='eg: 200'
+                    handleChange={(value) => handleChange('fullQuantity', value)}
+                />
+                <InputField
+                    label='Partial Quantity'
+                    showLabel
+                    placeholder='eg: 200'
+                    value={formData.partialQuantity}
+                    handleChange={(value) => handleChange('partialQuantity', value)}
+                />
+                <InputField
+                    label='Name'
+                    showLabel
+                    placeholder='Name'
+                    value={formData.name}
+                    handleChange={(value) => handleChange('name', value)}
+                />
+                <InputField
+                    label='Expiration Date'
+                    showLabel
+                    placeholder='YYYY-MM'
+                    value={formData.expirationDate}
+                    handleChange={(value) => handleChange('expirationDate', value)}
+                />
+                <InputField
+                    label='Lot Number'
+                    showLabel
+                    placeholder='Lot Number'
+                    value={formData.lotNumber}
+                    handleChange={(value) => handleChange('lotNumber', value)}
+                />
+                <InputField
+                    label='Package Size'
+                    showLabel
+                    placeholder='Package Size'
+                    value={formData.packageSize}
+                    handleChange={(value) => handleChange('packageSize', value)}
+                />
+                <InputField
+                    label='Request Type'
+                    showLabel
+                    placeholder='Request Type'
+                    value={formData.requestType}
+                    handleChange={(value) => handleChange('requestType', value)}
+                />
+                <InputField
+                    label='Dosage'
+                    showLabel
+                    placeholder='Dosage'
+                    value={formData.dosage}
+                    handleChange={(value) => handleChange('dosage', value)}
+                />
+                <InputField
+                    label='Strength'
+                    showLabel
+                    placeholder='Strength'
+                    value={formData.strength}
+                    handleChange={(value) => handleChange('strength', value)}
+                />
+                <View style={styles.buttonContainer}>
+                <FlatButton text="Add Item" onPress={handleAddItem} />
+                </View>
+                </KeyboardAvoidingView>
             </ScrollView>
+            
         </Layout>
     );
 };
@@ -67,5 +171,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         padding: 10
+    },
+    buttonContainer: {
+        alignItems: 'center',
     }
 });

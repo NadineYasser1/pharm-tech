@@ -42,7 +42,7 @@ const CreateReturnRequestsScreen = ({ route, navigation }) => {
             [key]: opt
         }))
     }
-    console.log(reqData)
+    
     const handleCreateRequest = () => {
         setIsLoading(true)
         axios.post(API.requests.replace('{pharmacyId}', pharmacyId), reqData).then(({ data }) => {

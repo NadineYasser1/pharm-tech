@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, Modal, Animated, Easing } from 'react-native';
+import React, {useEffect} from 'react';
+import { View, StyleSheet, Modal, Animated } from 'react-native';
 
 const LoadingSpinner = () => {
     const bounceValue = new Animated.Value(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         Animated.loop(
             Animated.spring(bounceValue, {
                 toValue: 1,

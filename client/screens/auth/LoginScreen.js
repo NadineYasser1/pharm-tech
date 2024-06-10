@@ -33,6 +33,7 @@ const LoginScreen = () => {
             //if it did we can either use Alert.alert('error', err.message)
             //or the api can return the fields where there is an error (e.g.: err.message: {username: 'Username is required'}) 
             //then we would have to set the border color of the field that has the error to Colors.error and show the message below that field
+            //or add an error handler custom hook that shows the error alert depending on the response status code but I did not have time to do that :)
 
         }).finally(() => {
             setIsLoading(false)
